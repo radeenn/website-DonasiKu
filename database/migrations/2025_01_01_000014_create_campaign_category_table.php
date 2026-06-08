@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('campaign_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            // Tidak perlu timestamps di tabel pivot kecuali dibutuhkan.
+            // Tidak perlu timestamps di tabel pivot kecuali dibutuhkan
         });
     }
 
