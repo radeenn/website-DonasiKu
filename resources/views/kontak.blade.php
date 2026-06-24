@@ -10,7 +10,7 @@
 .kontak-section { max-width: 900px; margin: 0 auto; padding: 48px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
 .kontak-info h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 20px; }
 .info-item { display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start; }
-.info-icon { width: 48px; height: 48px; background: #dcfce7; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+.info-icon { width: 58px; height: 48px; background: #dcfce7; color: #15803d; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: .62rem; font-weight: 800; letter-spacing: .04em; flex-shrink: 0; }
 .info-text h4 { font-weight: 700; margin-bottom: 4px; }
 .info-text p { font-size: 0.85rem; color: #6b7280; }
 .form-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 32px; }
@@ -37,28 +37,28 @@
     <div class="kontak-info">
         <h2>Informasi Kontak</h2>
         <div class="info-item">
-            <div class="info-icon">📧</div>
+            <div class="info-icon">EMAIL</div>
             <div class="info-text">
                 <h4>Email</h4>
                 <p>support@donasiku.com</p>
             </div>
         </div>
         <div class="info-item">
-            <div class="info-icon">📱</div>
+            <div class="info-icon">TELP</div>
             <div class="info-text">
                 <h4>Telepon</h4>
                 <p>0812-xxxx-xxxx</p>
             </div>
         </div>
         <div class="info-item">
-            <div class="info-icon">📍</div>
+            <div class="info-icon">LOKASI</div>
             <div class="info-text">
                 <h4>Alamat</h4>
                 <p>Jl. Adeirma Suryani No. 9, Pontianak, Kalimantan Barat</p>
             </div>
         </div>
         <div class="info-item">
-            <div class="info-icon">🕐</div>
+            <div class="info-icon">JAM</div>
             <div class="info-text">
                 <h4>Jam Operasional</h4>
                 <p>Senin – Jumat, 08.00 – 17.00 WIB</p>

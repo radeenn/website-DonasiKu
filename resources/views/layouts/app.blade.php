@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campaign Donasi</title>
+    <link rel="icon" href="data:,">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
@@ -11,7 +12,7 @@
     <!-- Navbar -->
     <nav class="bg-green-600 text-white shadow-md">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="/" class="text-xl font-bold tracking-wide">🌿 DonasiKita</a>
+            <a href="/" class="text-xl font-bold tracking-wide">DonasiKita</a>
             <a href="/campaign" class="bg-white text-green-600 font-semibold px-4 py-1.5 rounded-full text-sm hover:bg-green-50 transition">
                 Daftar Campaign
             </a>
@@ -36,7 +37,7 @@
 
     <!-- Footer -->
     <footer class="mt-16 bg-gray-800 text-gray-400 text-center py-4 text-sm">
-        &copy; {{ date('Y') }} DonasiKita — Praktikum Web Lanjut
+        &copy; {{ date('Y') }} DonasiKita
     </footer>
 
 </body>

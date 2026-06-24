@@ -6,6 +6,7 @@ use App\Models\Campaign;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CampaignController extends Controller
@@ -28,25 +29,37 @@ class CampaignController extends Controller
         return view('campaign.create', compact('categories'));
     }
 
-    // STORE: menyimpan campaign, rekening campaign, dan kategori campaign.
+    // STORE: menyimpan campaign, gambar, rekening campaign, dan kategori campaign.
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'target_donation' => ['required', 'numeric', 'min:0'],
-            'collected_donation' => ['nullable', 'numeric', 'min:0'],
-            'deadline' => ['required', 'date'],
-            'bank_name' => ['required', 'string', 'max:100'],
-            'account_number' => ['required', 'string', 'max:50'],
-            'account_holder' => ['required', 'string', 'max:100'],
-            'categories' => ['nullable', 'array'],
-            'categories.*' => ['exists:categories,id'],
-        ]);
+        $validated = $request->validate(
+            [
+                'title' => ['required', 'string', 'max:255'],
+                'description' => ['required', 'string'],
+                'image' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+                'target_donation' => ['required', 'numeric', 'min:0'],
+                'collected_donation' => ['nullable', 'numeric', 'min:0'],
+                'deadline' => ['required', 'date'],
+                'bank_name' => ['required', 'string', 'max:100'],
+                'account_number' => ['required', 'string', 'max:50'],
+                'account_holder' => ['required', 'string', 'max:100'],
+                'categories' => ['nullable', 'array'],
+                'categories.*' => ['exists:categories,id'],
+            ],
+            [
+                'image.required' => 'Gambar campaign wajib dipilih.',
+                'image.image' => 'File campaign harus berupa gambar.',
+                'image.mimes' => 'Gambar harus berformat JPG, JPEG, PNG, atau WEBP.',
+                'image.max' => 'Ukuran gambar maksimal 5 MB.',
+            ]
+        );
+
+        $imagePath = $request->file('image')->store('campaigns', 'public');
 
         $campaign = Campaign::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
+            'image' => $imagePath,
             'target_donation' => $validated['target_donation'],
             'collected_donation' => $validated['collected_donation'] ?? 0,
             'deadline' => $validated['deadline'],
@@ -62,7 +75,7 @@ class CampaignController extends Controller
         // Simpan relasi Many-to-Many: kategori campaign.
         $campaign->categories()->attach($validated['categories'] ?? []);
 
-        return redirect('/campaign')->with('success', 'Data campaign berhasil ditambahkan');
+        return redirect('/campaign')->with('success', 'Data campaign dan gambar berhasil ditambahkan.');
     }
 
     // EDIT: menampilkan form edit campaign.
@@ -74,25 +87,46 @@ class CampaignController extends Controller
         return view('campaign.edit', compact('campaign', 'categories'));
     }
 
-    // UPDATE: memperbarui campaign, rekening, dan kategori.
+    // UPDATE: memperbarui campaign, gambar, rekening, dan kategori.
     public function update(Request $request, Campaign $campaign): RedirectResponse
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'target_donation' => ['required', 'numeric', 'min:0'],
-            'collected_donation' => ['nullable', 'numeric', 'min:0'],
-            'deadline' => ['required', 'date'],
-            'bank_name' => ['required', 'string', 'max:100'],
-            'account_number' => ['required', 'string', 'max:50'],
-            'account_holder' => ['required', 'string', 'max:100'],
-            'categories' => ['nullable', 'array'],
-            'categories.*' => ['exists:categories,id'],
-        ]);
+        $validated = $request->validate(
+            [
+                'title' => ['required', 'string', 'max:255'],
+                'description' => ['required', 'string'],
+                'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+                'target_donation' => ['required', 'numeric', 'min:0'],
+                'collected_donation' => ['nullable', 'numeric', 'min:0'],
+                'deadline' => ['required', 'date'],
+                'bank_name' => ['required', 'string', 'max:100'],
+                'account_number' => ['required', 'string', 'max:50'],
+                'account_holder' => ['required', 'string', 'max:100'],
+                'categories' => ['nullable', 'array'],
+                'categories.*' => ['exists:categories,id'],
+            ],
+            [
+                'image.image' => 'File campaign harus berupa gambar.',
+                'image.mimes' => 'Gambar harus berformat JPG, JPEG, PNG, atau WEBP.',
+                'image.max' => 'Ukuran gambar maksimal 5 MB.',
+            ]
+        );
+
+        $imagePath = $campaign->image;
+
+        if ($request->hasFile('image')) {
+            $newImagePath = $request->file('image')->store('campaigns', 'public');
+
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            $imagePath = $newImagePath;
+        }
 
         $campaign->update([
             'title' => $validated['title'],
             'description' => $validated['description'],
+            'image' => $imagePath,
             'target_donation' => $validated['target_donation'],
             'collected_donation' => $validated['collected_donation'] ?? 0,
             'deadline' => $validated['deadline'],
@@ -109,15 +143,19 @@ class CampaignController extends Controller
 
         $campaign->categories()->sync($validated['categories'] ?? []);
 
-        return redirect('/campaign')->with('success', 'Data campaign berhasil diperbarui');
+        return redirect('/campaign')->with('success', 'Data campaign dan gambar berhasil diperbarui.');
     }
 
-    // DELETE: menghapus campaign beserta relasi yang cascade di database.
+    // DELETE: menghapus gambar campaign dan data beserta relasi yang cascade di database.
     public function destroy(Campaign $campaign): RedirectResponse
     {
+        if ($campaign->image) {
+            Storage::disk('public')->delete($campaign->image);
+        }
+
         $campaign->delete();
 
-        return redirect('/campaign')->with('success', 'Data campaign berhasil dihapus');
+        return redirect('/campaign')->with('success', 'Data campaign berhasil dihapus.');
     }
 
     // VIEW DONATION: menampilkan form donasi untuk campaign terpilih.
@@ -142,6 +180,6 @@ class CampaignController extends Controller
 
         return redirect()
             ->route('campaign.donation', $campaign)
-            ->with('success', 'Terima kasih, data donasi berhasil disimpan');
+            ->with('success', 'Terima kasih, data donasi berhasil disimpan.');
     }
 }

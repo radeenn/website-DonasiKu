@@ -12,6 +12,7 @@ class Campaign extends Model
     protected $fillable = [
         'title',
         'description',
+        'image',
         'target_donation',
         'collected_donation',
         'deadline',

@@ -21,7 +21,7 @@ header {
     color: #16a34a;
     letter-spacing: -0.5px;
 }
-nav { display: flex; align-items: center; gap: 32px; }
+nav { display: flex; align-items: center; gap: 24px; }
 nav a {
     color: #374151;
     font-weight: 500;
@@ -43,6 +43,12 @@ nav a:hover { color: #16a34a; }
     font-family: inherit;
 }
 .btn-donate:hover { background: #15803d; }
+@media (max-width: 900px) {
+    .header-inner { height: auto; min-height: 64px; padding-top: 12px; padding-bottom: 12px; flex-wrap: wrap; gap: 12px; }
+    nav { order: 3; width: 100%; overflow-x: auto; padding-bottom: 3px; gap: 20px; }
+    nav a { white-space: nowrap; }
+}
+@media (max-width: 520px) { .btn-donate { display: none; } }
 </style>
 
 <header>
@@ -52,6 +58,7 @@ nav a:hover { color: #16a34a; }
             <a href="/">Home</a>
             <a href="/donasi">Donasi</a>
             <a href="/campaign">Campaign</a>
+            <a href="{{ route('documentations.index') }}">File & Gambar</a>
             <a href="/profil">Profil</a>
             <a href="/kontak">Kontak</a>
         </nav>

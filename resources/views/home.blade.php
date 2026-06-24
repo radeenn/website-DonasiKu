@@ -109,12 +109,17 @@
 }
 .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
 .card-img {
-    height: 160px;
+    height: 175px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 3rem;
+    background: linear-gradient(135deg,#dcfce7,#f0fdf4);
+    overflow: hidden;
 }
+.card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .25s; }
+.card:hover .card-img img { transform: scale(1.035); }
+.image-placeholder { font-size: .78rem; font-weight: 800; letter-spacing: .08em; color: #15803d; text-transform: uppercase; }
 .card-body { padding: 20px; }
 .card-body h4 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
 .card-body p { font-size: 0.85rem; color: #6b7280; margin-bottom: 16px; line-height: 1.5; }
@@ -163,7 +168,10 @@
     background: #dcfce7;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.6rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #15803d;
+    letter-spacing: .05em;
     margin: 0 auto 16px;
 }
 .step h4 { font-weight: 700; margin-bottom: 6px; }
@@ -208,38 +216,35 @@
     <div class="programs-inner">
         <h2 class="section-title">Program Donasi Aktif</h2>
         <p class="section-sub">Pilih program yang ingin kamu dukung</p>
-        <div class="cards-grid">
-            <div class="card">
-                <div class="card-img" style="background:#fef9c3;">🏫</div>
-                <div class="card-body">
-                    <h4>Beasiswa Anak Kurang Mampu</h4>
-                    <p>Membantu anak-anak berprestasi yang membutuhkan dukungan biaya pendidikan.</p>
-                    <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
-                    <div class="progress-label"><span>Rp 3,6 Jt terkumpul</span><span>72%</span></div>
-                    <a href="/donasi" class="btn-card">Donasi Sekarang</a>
-                </div>
+        @if($campaigns->isEmpty())
+            <div style="text-align:center;padding:42px;background:#fff;border:2px dashed #bbf7d0;border-radius:16px;color:#6b7280">
+                Belum ada campaign aktif. <a href="{{ route('campaign.create') }}" style="color:#16a34a;font-weight:800">Tambah campaign pertama</a>.
             </div>
-            <div class="card">
-                <div class="card-img" style="background:#dbeafe;">🏥</div>
-                <div class="card-body">
-                    <h4>Bantu Biaya Pengobatan</h4>
-                    <p>Meringankan beban biaya pengobatan warga yang tidak mampu membayar layanan kesehatan.</p>
-                    <div class="progress-bar"><div class="progress-fill" style="width:48%"></div></div>
-                    <div class="progress-label"><span>Rp 2,4 Jt terkumpul</span><span>48%</span></div>
-                    <a href="/donasi" class="btn-card">Donasi Sekarang</a>
-                </div>
+        @else
+            <div class="cards-grid">
+                @foreach($campaigns as $campaign)
+                    @php
+                        $percent = $campaign->target_donation > 0 ? min(100, round(($campaign->collected_donation / $campaign->target_donation) * 100)) : 0;
+                    @endphp
+                    <div class="card">
+                        <div class="card-img">
+                            @if($campaign->image)
+                                <img src="{{ asset('storage/' . $campaign->image) }}" alt="{{ $campaign->title }}" loading="lazy">
+                            @else
+                                <span class="image-placeholder">DonasiKu</span>
+                            @endif
+                        </div>
+                        <div class="card-body">
+                            <h4>{{ $campaign->title }}</h4>
+                            <p>{{ \Illuminate\Support\Str::limit($campaign->description, 105) }}</p>
+                            <div class="progress-bar"><div class="progress-fill" style="width:{{ $percent }}%"></div></div>
+                            <div class="progress-label"><span>Rp {{ number_format($campaign->collected_donation, 0, ',', '.') }} terkumpul</span><span>{{ $percent }}%</span></div>
+                            <a href="{{ route('campaign.donation', $campaign) }}" class="btn-card">Donasi Sekarang</a>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-            <div class="card">
-                <div class="card-img" style="background:#fce7f3;">🍱</div>
-                <div class="card-body">
-                    <h4>Program Pangan Darurat</h4>
-                    <p>Menyalurkan sembako dan makanan bergizi untuk keluarga kurang mampu di sekitar kita.</p>
-                    <div class="progress-bar"><div class="progress-fill" style="width:89%"></div></div>
-                    <div class="progress-label"><span>Rp 8,9 Jt terkumpul</span><span>89%</span></div>
-                    <a href="/donasi" class="btn-card">Donasi Sekarang</a>
-                </div>
-            </div>
-        </div>
+        @endif
     </div>
 </section>
 
@@ -250,22 +255,22 @@
         <p class="section-sub">Mudah, cepat, dan transparan</p>
         <div class="steps">
             <div class="step">
-                <div class="step-icon">🔍</div>
+                <div class="step-icon">01</div>
                 <h4>Pilih Program</h4>
                 <p>Temukan program donasi yang sesuai dengan niat baikmu.</p>
             </div>
             <div class="step">
-                <div class="step-icon">💳</div>
+                <div class="step-icon">02</div>
                 <h4>Tentukan Nominal</h4>
                 <p>Masukkan jumlah donasi sesuai kemampuanmu, berapapun berarti.</p>
             </div>
             <div class="step">
-                <div class="step-icon">✅</div>
+                <div class="step-icon">03</div>
                 <h4>Konfirmasi Donasi</h4>
                 <p>Selesaikan pembayaran dan terima konfirmasi donasi via email.</p>
             </div>
             <div class="step">
-                <div class="step-icon">📊</div>
+                <div class="step-icon">04</div>
                 <h4>Pantau Progres</h4>
                 <p>Lihat laporan penggunaan dana secara transparan dan real-time.</p>
             </div>

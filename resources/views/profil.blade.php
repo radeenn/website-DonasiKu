@@ -9,7 +9,7 @@
 .page-hero p { color: #6b7280; font-size: 0.95rem; }
 .profil-section { max-width: 600px; margin: 0 auto; padding: 48px 24px; }
 .profil-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 40px; text-align: center; }
-.avatar { width: 96px; height: 96px; background: #dcfce7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 16px; }
+.avatar { width: 96px; height: 96px; background: #dcfce7; color: #15803d; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 800; letter-spacing: .08em; margin: 0 auto 16px; }
 .profil-card h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
 .profil-card .email { color: #6b7280; font-size: 0.9rem; margin-bottom: 24px; }
 .divider { border: none; border-top: 1px solid #f3f4f6; margin: 24px 0; }
@@ -31,7 +31,7 @@
 
 <div class="profil-section">
     <div class="profil-card">
-        <div class="avatar">👤</div>
+        <div class="avatar">DK</div>
         <h2>Pino Fandu Winata</h2>
         <div class="email">pinofanduwinata@email.com</div>
 
