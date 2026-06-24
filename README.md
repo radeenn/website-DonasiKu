@@ -33,12 +33,3 @@ php artisan serve
 ```bash
 npm run dev
 ```
-
-## Perbaikan Migration Documentation Files
-
-Migration sudah aman untuk dua kondisi:
-
-1. Database baru yang belum memiliki tabel `documentation_files`.
-2. Database lama yang sudah memiliki tabel tersebut, tetapi belum memiliki kolom `title`, `file_path`, atau `file_type`.
-
-Migration perbaikan tidak menghapus data lama.
